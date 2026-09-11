@@ -1,0 +1,12 @@
+<p class="meta">
+  <time datetime="{{ include.post.date | date_to_xmlschema }}">
+    {{ include.post.date | date: "%b %-d, %Y" }}
+  </time>
+  {%- if include.post.tags and include.post.tags.size > 0 %}
+  <span class="meta__tags">
+    {%- for tag in include.post.tags %}
+    <a class="tag" href="{{ '/tags/' | append: tag | append: '/' | relative_url }}">{{ tag }}</a>
+    {%- endfor %}
+  </span>
+  {%- endif %}
+</p>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: 'en' }}">
+{%- include head.html -%}
+<body>
+  <a class="skip" href="#content">Skip to content</a>
+  {%- include header.html -%}
+  <main class="wrap" id="content">
+    {{ content }}
+  </main>
+  {%- include footer.html -%}
+
+  <script>
+  // Lazy mermaid loader.
+  //
+  // Only pages containing a mermaid block fetch the library, so every other
+  // page on this site ships zero JavaScript. Kramdown+Rouge put the language
+  // class in one of two places depending on version, so handle both rather
+  // than guessing:
+  //   <div class="language-mermaid highlighter-rouge">...<code>
+  //   <pre><code class="language-mermaid">
+  (function () {
+    var nodes = document.querySelectorAll('.language-mermaid');
+    if (!nodes.length) return;
+
+    var pending = [];
+    Array.prototype.forEach.call(nodes, function (node) {
+      // Walk up to the outermost wrapper so no <pre>/<div> husk is left behind.
+      var target = node.closest('div.highlighter-rouge') || node.closest('pre') || node;
+      var div = document.createElement('div');
+      div.className = 'mermaid';
+      div.setAttribute('data-pending', '');   // hidden so raw source never flashes
+      div.textContent = node.textContent.trim();
+      target.parentNode.replaceChild(div, target);
+      pending.push(div);
+    });
+
+    // Always reveal, even if the CDN is blocked or mermaid throws — otherwise
+    // a failed load would hide the diagram source permanently.
+    function reveal() {
+      pending.forEach(function (d) { d.removeAttribute('data-pending'); });
+    }
+    document.addEventListener('mermaid:done', reveal, { once: true });
+    setTimeout(reveal, 6000);
+
+    var dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var boot = document.createElement('script');
+    boot.type = 'module';
+    boot.textContent =
+      'import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@12/dist/mermaid.esm.min.mjs";' +
+      'mermaid.initialize({' +
+      '  startOnLoad: false,' +
+      '  securityLevel: "strict",' +
+      '  fontFamily: "inherit",' +
+      '  theme: "' + (dark ? 'dark' : 'default') + '"' +
+      '});' +
+      'try { await mermaid.run(); } finally {' +
+      '  document.dispatchEvent(new CustomEvent("mermaid:done"));' +
+      '}';
+    document.body.appendChild(boot);
+  })();
+  </script>
+</body>
+</html>

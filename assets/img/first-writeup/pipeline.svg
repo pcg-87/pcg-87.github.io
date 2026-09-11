@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 150" role="img"
+     aria-label="Pipeline: git push to Actions build to artifact to deploy to live site">
+  <style><![CDATA[
+    /* An SVG referenced as an image is its own document, so `currentColor`
+       cannot reach it from the host page. An embedded media query can. */
+    .box    { fill: #ffffff; stroke: #1f2328; stroke-width: 1.5; }
+    .label  { fill: #1f2328; font: 500 13px ui-sans-serif, system-ui, -apple-system, sans-serif; }
+    .arrow  { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .head   { fill: #1f2328; }
+    .accent { fill: #0969da; }
+
+    @media (prefers-color-scheme: dark) {
+      .box    { fill: #161b22; stroke: #8b949e; }
+      .label  { fill: #e6edf3; }
+      .arrow  { stroke: #8b949e; }
+      .head   { fill: #8b949e; }
+      .accent { fill: #58a6ff; }
+    }
+  ]]></style>
+
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path class="head" d="M 0 0 L 10 5 L 0 10 z"/>
+    </marker>
+  </defs>
+
+  <g>
+    <rect class="box" x="8" y="45" width="130" height="46" rx="6"/>
+    <text class="label" x="73" y="73" text-anchor="middle">git push</text>
+
+    <rect class="box" x="188" y="45" width="150" height="46" rx="6"/>
+    <text class="label" x="263" y="73" text-anchor="middle">jekyll build</text>
+
+    <rect class="box" x="388" y="45" width="150" height="46" rx="6"/>
+    <text class="label" x="463" y="73" text-anchor="middle">artifact</text>
+
+    <rect class="box" x="588" y="45" width="140" height="46" rx="6"/>
+    <text class="label" x="658" y="73" text-anchor="middle">deploy</text>
+
+    <circle class="accent" cx="800" cy="68" r="9"/>
+    <text class="label" x="800" y="106" text-anchor="middle">live</text>
+  </g>
+
+  <g class="arrow" marker-end="url(#a)">
+    <path d="M 142 68 H 184"/>
+    <path d="M 342 68 H 384"/>
+    <path d="M 542 68 H 584"/>
+    <path d="M 732 68 H 786"/>
+  </g>
+</svg>

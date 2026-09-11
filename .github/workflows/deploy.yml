@@ -1,0 +1,64 @@
+name: Build and deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Let a running deploy finish rather than cancelling it midway.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          # Left off deliberately: there is no committed Gemfile.lock yet, and
+          # bundler-cache keys on one. Flip to true once a lock is committed.
+          bundler-cache: false
+
+      - name: Install gems
+        run: |
+          bundle config set --local path vendor/bundle
+          bundle install --jobs 4 --retry 3
+
+      # ruby/setup-ruby + Bundler rather than actions/jekyll-build-pages:
+      # that action pins its own Jekyll and would undo the plugin freedom
+      # (jekyll-archives) that this whole setup exists for.
+      - name: Build
+        run: bundle exec jekyll build --trace
+        env:
+          JEKYLL_ENV: production
+
+      - name: Check internal links and assets
+        run: ruby tools/check_links.rb _site
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  # Only main deploys. Pull requests stop after the artifact upload, so the
+  # built site is downloadable from the run as a preview.
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

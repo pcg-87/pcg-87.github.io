@@ -1,0 +1,23 @@
+---
+layout: default
+title: Tags
+permalink: /tags/
+---
+<div class="prose">
+  <h1>Tags</h1>
+</div>
+
+<ul class="tag-cloud">
+  {%- assign tags = site.tags | sort %}
+  {%- for pair in tags %}
+  <li>
+    <a class="tag tag--lg" href="{{ '/tags/' | append: pair[0] | append: '/' | relative_url }}">
+      {{ pair[0] }}<span class="tag__count">{{ pair[1] | size }}</span>
+    </a>
+  </li>
+  {%- endfor %}
+</ul>
+
+{%- if site.tags.size == 0 %}
+<p>No tags yet.</p>
+{%- endif %}

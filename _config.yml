@@ -1,0 +1,42 @@
+title: Learning Writeups
+description: Notes and writeups on things I'm learning.
+author: Paul Godfrey
+url: "https://pcg-87.github.io"
+baseurl: ""
+
+timezone: America/New_York
+permalink: /:year/:month/:day/:title/
+
+plugins:
+  - jekyll-feed
+  - jekyll-archives
+  - jekyll-seo-tag
+
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: false
+
+# Generates /tags/<tag>/ pages. This plugin is why the build must run in
+# GitHub Actions: Pages' built-in Jekyll runs safe mode and won't load it.
+jekyll-archives:
+  enabled: [tags]
+  layouts:
+    tag: tag
+  permalinks:
+    tag: /tags/:name/
+
+defaults:
+  - scope: { path: "", type: posts }
+    values: { layout: post }
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - tools/
+  - vendor/
