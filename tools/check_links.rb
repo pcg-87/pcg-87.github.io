@@ -22,7 +22,9 @@ pages    = Dir.glob(File.join(root, '**', '*.html'))
 
 pages.each do |page|
   page_dir = File.dirname(page)
-  File.read(page).scan(ATTR) do |dq, sq|
+  # Explicit encoding: Ruby falls back to US-ASCII when LANG is unset,
+  # which makes scan() raise on any non-ASCII character in the page.
+  File.read(page, encoding: 'UTF-8').scan(ATTR) do |dq, sq|
     raw = (dq || sq).to_s.strip
     next if raw.empty? || raw.match?(SKIP)
 

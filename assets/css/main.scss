@@ -52,7 +52,9 @@ body {
 
 .wrap {
   width: 100%;
-  max-width: 46rem;
+  /* 54rem - 2.5rem of padding leaves ~51.5rem of content, so the 52rem
+     wide-block bound below is actually reachable. */
+  max-width: 54rem;
   margin: 0 auto;
   padding: 0 1.25rem;
 }
@@ -98,8 +100,11 @@ a:hover { text-decoration-thickness: 2px; }
 }
 
 /* ---------- typography ---------- */
+/* The outer bound is wide; the reading measure is applied to text elements
+   individually below. Clamping .prose itself to the measure would also clamp
+   code blocks, figures and diagrams, which want the extra width. */
 .prose {
-  max-width: var(--measure);
+  max-width: 52rem;
 
   h1 { font-size: 1.875rem; line-height: 1.25; letter-spacing: -0.02em; margin: 0 0 0.75rem; }
   h2 { font-size: 1.3125rem; line-height: 1.3; margin: 2.5rem 0 0.75rem; letter-spacing: -0.01em; }
@@ -124,6 +129,17 @@ a:hover { text-decoration-thickness: 2px; }
     th { font-weight: 600; }
   }
 }
+
+/* Reading measure for prose text only. Code blocks, figures and mermaid
+   diagrams deliberately sit outside this and may run to the full 52rem. */
+.prose h1, .prose h2, .prose h3,
+.prose p, .prose ul, .prose ol, .prose blockquote, .prose table,
+.post-head, .lede {
+  max-width: var(--measure);
+}
+
+/* Captions read as prose, so keep them narrow even under a wide figure. */
+.fig figcaption { max-width: var(--measure); }
 
 .lede { font-size: 1.0625rem; color: var(--fg-muted); margin-bottom: 2rem; }
 
@@ -185,7 +201,9 @@ code, pre, .highlight { font-family: var(--mono); }
 
 /* Rouge wraps blocks in .highlighter-rouge > .highlight > pre. Widen code and
    diagrams past the prose measure so long lines have room. */
-.highlighter-rouge, pre.highlight, div.highlight {
+/* div. prefix matters: kramdown puts .highlighter-rouge on inline <code>
+   spans too, and this is a block-level rule. */
+div.highlighter-rouge, pre.highlight, div.highlight {
   max-width: 52rem;
 }
 
@@ -204,6 +222,23 @@ div.highlight pre, pre.highlight {
 }
 
 div.highlight code { background: none; border: 0; padding: 0; font-size: inherit; }
+
+/* A mermaid fence renders as an unclassed <pre> until the loader swaps it, and
+   stays that way if JavaScript is off. Style it so that fallback reads as
+   intentional source rather than broken layout. */
+pre:not([class]) {
+  max-width: 52rem;
+  margin: 0 0 1.15rem;
+  padding: 0.9rem 1rem;
+  background: var(--code-bg);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.8438rem;
+  line-height: 1.55;
+
+  code { background: none; border: 0; padding: 0; font-size: inherit; }
+}
 
 /* ---------- Rouge: light ----------
    Class names are Pygments-derived and stable across Rouge 5.x. */
@@ -283,13 +318,15 @@ div.highlight code { background: none; border: 0; padding: 0; font-size: inherit
 /* Light-background screenshots glare against a dark page. Dim them slightly
    and add a border to define the edge; full brightness on hover/focus. */
 @media (prefers-color-scheme: dark) {
-  .fig img {
+  /* Raster only. An SVG that carries its own prefers-color-scheme rules has
+     already adapted, so dimming and bordering it would be wrong. */
+  .fig img:not([src$=".svg"]) {
     border: 1px solid var(--rule);
     filter: brightness(0.87);
     transition: filter 0.15s ease-in-out;
   }
-  .fig__link:hover img,
-  .fig__link:focus-visible img { filter: none; }
+  .fig__link:hover img:not([src$=".svg"]),
+  .fig__link:focus-visible img:not([src$=".svg"]) { filter: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -301,7 +338,9 @@ div.highlight code { background: none; border: 0; padding: 0; font-size: inherit
   margin: 1.75rem 0;
   max-width: 52rem;
   overflow-x: auto;           /* wide diagrams scroll instead of overflowing */
-  text-align: center;
+  /* Left-aligned on purpose: a diagram wider than the container should start
+     at its left edge rather than opening mid-diagram. */
+  text-align: left;
 
   /* Hidden until rendered so raw diagram source never flashes. The loader
      always clears this attribute, including on CDN failure or timeout. */

@@ -1,18 +1,22 @@
 ---
 layout: default
 ---
+{%- comment -%}
+  jekyll-archives exposes the tag name as page.title (page.tag is empty, and
+  page.type is "tag"). Verified against jekyll-archives 2.3.0.
+{%- endcomment -%}
 <div class="prose">
-  <h1>Tagged &ldquo;{{ page.tag }}&rdquo;</h1>
+  <h1>Tagged &ldquo;{{ page.title }}&rdquo;</h1>
   <p class="meta">{{ page.posts | size }} writeup{% if page.posts.size != 1 %}s{% endif %}</p>
-
-  <ul class="post-list">
-    {%- for post in page.posts %}
-    <li>
-      <a class="post-list__title" href="{{ post.url | relative_url }}">{{ post.title }}</a>
-      {% include post-meta.html post=post %}
-    </li>
-    {%- endfor %}
-  </ul>
-
-  <p><a href="{{ '/tags/' | relative_url }}">&larr; All tags</a></p>
 </div>
+
+<ul class="post-list">
+  {%- for post in page.posts %}
+  <li>
+    <a class="post-list__title" href="{{ post.url | relative_url }}">{{ post.title }}</a>
+    {% include post-meta.html post=post %}
+  </li>
+  {%- endfor %}
+</ul>
+
+<p class="prose"><a href="{{ '/tags/' | relative_url }}">&larr; All tags</a></p>

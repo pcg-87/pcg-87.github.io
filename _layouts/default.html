@@ -9,33 +9,34 @@
   </main>
   {%- include footer.html -%}
 
+{%- comment -%}
+  Emit the mermaid loader only on pages whose rendered body actually contains a
+  mermaid block. Pages without a diagram ship no JavaScript at all -- not even
+  this detector.
+{%- endcomment -%}
+{%- if content contains 'language-mermaid' %}
   <script>
-  // Lazy mermaid loader.
-  //
-  // Only pages containing a mermaid block fetch the library, so every other
-  // page on this site ships zero JavaScript. Kramdown+Rouge put the language
-  // class in one of two places depending on version, so handle both rather
-  // than guessing:
-  //   <div class="language-mermaid highlighter-rouge">...<code>
-  //   <pre><code class="language-mermaid">
+  // Kramdown has no mermaid lexer, so a mermaid fence falls through to a plain
+  // pre > code.language-mermaid. Older/other Rouge paths wrap it in a
+  // highlighter-rouge div instead, so walk up to whichever wrapper exists.
   (function () {
-    var nodes = document.querySelectorAll('.language-mermaid');
+    var nodes = document.querySelectorAll('code.language-mermaid, div.language-mermaid');
     if (!nodes.length) return;
 
     var pending = [];
     Array.prototype.forEach.call(nodes, function (node) {
-      // Walk up to the outermost wrapper so no <pre>/<div> husk is left behind.
+      if (!node.isConnected) return;                 // already swallowed by an earlier replace
       var target = node.closest('div.highlighter-rouge') || node.closest('pre') || node;
       var div = document.createElement('div');
       div.className = 'mermaid';
-      div.setAttribute('data-pending', '');   // hidden so raw source never flashes
+      div.setAttribute('data-pending', '');          // hidden so raw source never flashes
       div.textContent = node.textContent.trim();
       target.parentNode.replaceChild(div, target);
       pending.push(div);
     });
 
-    // Always reveal, even if the CDN is blocked or mermaid throws — otherwise
-    // a failed load would hide the diagram source permanently.
+    // Always reveal, even if the CDN is blocked or mermaid throws -- otherwise a
+    // failed load would hide the diagram permanently.
     function reveal() {
       pending.forEach(function (d) { d.removeAttribute('data-pending'); });
     }
@@ -51,6 +52,14 @@
       '  startOnLoad: false,' +
       '  securityLevel: "strict",' +
       '  fontFamily: "inherit",' +
+      // useMaxWidth:false renders at natural size and lets the .mermaid
+      // wrapper scroll, instead of shrinking labels to unreadable on phones.
+      '  flowchart: { useMaxWidth: false },' +
+      '  sequence:  { useMaxWidth: false },' +
+      '  state:     { useMaxWidth: false },' +
+      '  er:        { useMaxWidth: false },' +
+      '  class:     { useMaxWidth: false },' +
+      '  gantt:     { useMaxWidth: false },' +
       '  theme: "' + (dark ? 'dark' : 'default') + '"' +
       '});' +
       'try { await mermaid.run(); } finally {' +
@@ -59,5 +68,6 @@
     document.body.appendChild(boot);
   })();
   </script>
+{%- endif %}
 </body>
 </html>
