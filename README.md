@@ -78,9 +78,28 @@ actually makes it smaller.
 
 ## Previewing before publishing
 
-There is no local Jekyll install, so instead: push your work to a branch and
-open a pull request. The workflow builds it and attaches the rendered site as a
+Locally, with live reload on save:
+
+```bash
+bundle exec jekyll serve --livereload
+```
+
+Then open <http://127.0.0.1:4000>. Ruby came from Homebrew (`brew install
+ruby`); if `bundle` is not found, add it to PATH with:
+
+```bash
+export PATH="/opt/homebrew/opt/ruby/bin:/opt/homebrew/lib/ruby/gems/4.0.0/bin:$PATH"
+```
+
+You can also preview without building anything: push to a branch and open a
+pull request. The workflow builds it and attaches the rendered site as a
 downloadable artifact on the run. Merging to `main` is what deploys.
+
+Before pushing, the same checks CI runs:
+
+```bash
+bundle exec jekyll build && ruby tools/check_links.rb _site
+```
 
 ## Layout
 

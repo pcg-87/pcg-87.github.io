@@ -22,15 +22,12 @@ jobs:
 
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3'
-          # Left off deliberately: there is no committed Gemfile.lock yet, and
-          # bundler-cache keys on one. Flip to true once a lock is committed.
-          bundler-cache: false
-
-      - name: Install gems
-        run: |
-          bundle config set --local path vendor/bundle
-          bundle install --jobs 4 --retry 3
+          ruby-version: '3.4'
+          # `bundler: latest` because Gemfile.lock is in bundler 4 format
+          # (BUNDLED WITH 4.0.20); the default bundler would not read it.
+          bundler: latest
+          # Safe now that a Gemfile.lock is committed -- the cache keys on it.
+          bundler-cache: true
 
       # ruby/setup-ruby + Bundler rather than actions/jekyll-build-pages:
       # that action pins its own Jekyll and would undo the plugin freedom
