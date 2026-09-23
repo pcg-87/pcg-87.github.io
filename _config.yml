@@ -40,3 +40,5 @@ exclude:
   - README.md
   - tools/
   - vendor/
+  - docs/
+  - .claude/
