@@ -74,8 +74,8 @@
       // the gaps between rows.
       flowchart: {
         useMaxWidth: false,
-        wrappingWidth: 205,
-        nodeSpacing: 48,
+        wrappingWidth: 160,
+        nodeSpacing: 36,
         rankSpacing: 75,
         padding: 14,
         // 'basis' is mermaid's default and gives the arc-shaped joins;
@@ -93,7 +93,7 @@
     var boot = document.createElement('script');
     boot.type = 'module';
     boot.textContent =
-      'import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@12/dist/mermaid.esm.min.mjs";' +
+      'import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.17.2/dist/mermaid.esm.min.mjs";' +
       'mermaid.initialize(' + JSON.stringify(cfg) + ');' +
       'try { await mermaid.run(); } finally {' +
       '  document.dispatchEvent(new CustomEvent("mermaid:done"));' +
