@@ -338,9 +338,13 @@ pre:not([class]) {
   margin: 1.75rem 0;
   max-width: 52rem;
   overflow-x: auto;           /* wide diagrams scroll instead of overflowing */
-  /* Left-aligned on purpose: a diagram wider than the container should start
-     at its left edge rather than opening mid-diagram. */
   text-align: left;
+
+  /* Centre the diagram under the text when it fits. Auto margins collapse to
+     zero once the SVG is wider than the container, so a wide diagram still
+     starts at its left edge instead of opening mid-diagram with the left
+     side unreachable — which is what text-align: center would do here. */
+  svg { display: block; margin-inline: auto; }
 
   /* Hidden until rendered so raw diagram source never flashes. The loader
      always clears this attribute, including on CDN failure or timeout. */

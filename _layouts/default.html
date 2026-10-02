@@ -44,24 +44,54 @@
     setTimeout(reveal, 6000);
 
     var dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // Teal palette, picked to sit with the page's own colours in both themes.
+    var c = dark
+      ? { fill: '#10302a', border: '#3fb492', text: '#c8f2e4', line: '#8b949e', label: '#0d1117' }
+      : { fill: '#e4f5ef', border: '#17795f', text: '#0b3d31', line: '#57606a', label: '#ffffff' };
+
+    var cfg = {
+      startOnLoad: false,
+      securityLevel: 'strict',
+      fontFamily: 'inherit',
+      theme: 'base',
+      themeVariables: {
+        background: 'transparent',
+        mainBkg: c.fill,
+        primaryColor: c.fill,
+        primaryBorderColor: c.border,
+        primaryTextColor: c.text,
+        nodeBorder: c.border,
+        lineColor: c.line,
+        textColor: c.text,
+        edgeLabelBackground: c.label,
+        fontSize: '14px'
+      },
+      // useMaxWidth:false renders at natural size and lets the .mermaid
+      // wrapper scroll, instead of shrinking labels to unreadable on phones.
+      // wrappingWidth widens the boxes so labels wrap onto fewer lines, which
+      // is what actually shortens a tall `flowchart TD`; rankSpacing closes
+      // the gaps between rows.
+      flowchart: {
+        useMaxWidth: false,
+        wrappingWidth: 320,
+        nodeSpacing: 40,
+        rankSpacing: 34,
+        padding: 12,
+        diagramPadding: 4
+      },
+      sequence: { useMaxWidth: false },
+      state:    { useMaxWidth: false },
+      er:       { useMaxWidth: false },
+      class:    { useMaxWidth: false },
+      gantt:    { useMaxWidth: false }
+    };
+
     var boot = document.createElement('script');
     boot.type = 'module';
     boot.textContent =
       'import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@12/dist/mermaid.esm.min.mjs";' +
-      'mermaid.initialize({' +
-      '  startOnLoad: false,' +
-      '  securityLevel: "strict",' +
-      '  fontFamily: "inherit",' +
-      // useMaxWidth:false renders at natural size and lets the .mermaid
-      // wrapper scroll, instead of shrinking labels to unreadable on phones.
-      '  flowchart: { useMaxWidth: false },' +
-      '  sequence:  { useMaxWidth: false },' +
-      '  state:     { useMaxWidth: false },' +
-      '  er:        { useMaxWidth: false },' +
-      '  class:     { useMaxWidth: false },' +
-      '  gantt:     { useMaxWidth: false },' +
-      '  theme: "' + (dark ? 'dark' : 'default') + '"' +
-      '});' +
+      'mermaid.initialize(' + JSON.stringify(cfg) + ');' +
       'try { await mermaid.run(); } finally {' +
       '  document.dispatchEvent(new CustomEvent("mermaid:done"));' +
       '}';
