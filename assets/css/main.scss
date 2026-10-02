@@ -357,8 +357,19 @@ pre:not([class]) {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-height: 3.2em;
+    min-height: 4.6em;
+    /* Equal widths, same trick: min-width matches the wrappingWidth in the
+       loader, so every label measures the same width and no box can be
+       narrower than any other. Keep the two numbers in step. */
+    min-width: 205px;
   }
+
+  /* Dotted edges. Mermaid tags these with both edge-pattern-dotted and
+     edge-pattern-solid, then computes a per-edge stroke-dasharray from the
+     path length: one of the three came out as a single 318px dash, which
+     draws as a solid line. Pin the pattern so every dotted edge looks
+     dotted. */
+  .flowchart-link.edge-pattern-dotted { stroke-dasharray: 3 3 !important; }
 
   /* Hidden until rendered so raw diagram source never flashes. The loader
      always clears this attribute, including on CDN failure or timeout. */
