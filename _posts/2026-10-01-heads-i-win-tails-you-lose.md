@@ -42,10 +42,10 @@ It doesn't, because nobody asks it. The buyer sets up a shell company with no as
 
 ```mermaid
 flowchart TD
-    A["Fund creates a shell<br/>no assets<br/>no operations"] --> B["The shell borrows<br/>secured on<br/>the target's assets"]
-    B --> C["Shell merges<br/>with the target<br/>board and shareholders<br/>approve"]
-    C --> D["Surviving company<br/>inherits the debt<br/>by law"]
-    C --> E["Shareholders<br/>take cash<br/>and exit"]
+    A["Fund creates a shell, no assets, no operations"] --> B["The shell borrows secured on the target's assets"]
+    B --> C["Shell merges with the target, board and shareholders approve"]
+    C --> D["Surviving company inherits the debt by law"]
+    C --> E["Shareholders take cash and exit"]
 ```
 
 What the board and shareholders approved was a merger, not a loan. They took cash and left. Nobody who benefited stayed behind to service it. The fund puts in a slice of equity and borrows the rest against what the company already owns. A business that owns its buildings outright is the ideal target.
@@ -81,12 +81,12 @@ Property and management are cost lines that feed rate-setting in the states that
 
 ```mermaid
 flowchart TD
-    A["Payer revenue<br/>rate set by formula<br/>63% of residents<br/>on Medicaid"] --> B["The facility"]
-    B --> C["Paid first<br/>rent<br/>monitoring fees<br/>interest"]
-    B --> F["Paid to affiliates<br/>real estate +36%<br/>management +42%"]
-    C --> D["What's left<br/>care staffing<br/>aide hours -3%/day"]
+    A["Payer revenue rate set by formula, 63% of residents on Medicaid"] --> B["The facility"]
+    B --> C["Paid first, rent, monitoring fees, interest"]
+    B --> F["Paid to affiliates, real estate +36%, management +42%"]
+    C --> D["What's left, care staffing, aide hours -3%/day"]
     F --> D
-    D --> E["Residents<br/>mortality +11%"]
+    D --> E["Residents mortality +11%"]
     C -.-> G["Reported costs rise"]
     F -.-> G
     G -.-> A

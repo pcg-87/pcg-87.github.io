@@ -340,10 +340,13 @@ pre:not([class]) {
   overflow-x: auto;           /* wide diagrams scroll instead of overflowing */
   text-align: left;
 
-  /* Centre the diagram under the text when it fits. Auto margins collapse to
-     zero once the SVG is wider than the container, so a wide diagram still
-     starts at its left edge instead of opening mid-diagram with the left
-     side unreachable — which is what text-align: center would do here. */
+  /* Centre the diagram on the TEXT column, not the wider block bound. At
+     52rem the container is ~216px wider than the prose measure, so centring
+     inside it pushed every diagram visibly right of the paragraphs above.
+     Auto margins still collapse to zero once the SVG outgrows the column, so
+     a wide diagram starts at its left edge and scrolls, rather than opening
+     mid-diagram with the left side unreachable. */
+  max-width: var(--measure);
   svg { display: block; margin-inline: auto; }
 
   /* Hidden until rendered so raw diagram source never flashes. The loader
