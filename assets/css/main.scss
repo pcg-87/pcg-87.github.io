@@ -349,6 +349,17 @@ pre:not([class]) {
   max-width: var(--measure);
   svg { display: block; margin-inline: auto; }
 
+  /* Equal box heights. Mermaid sizes each node to its own label, so a
+     one-line box next to a two-line box renders shorter. It measures the
+     label element during render, and this stylesheet is already applied by
+     then, so a min-height on the label is picked up as the measured height. */
+  .nodeLabel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 3.2em;
+  }
+
   /* Hidden until rendered so raw diagram source never flashes. The loader
      always clears this attribute, including on CDN failure or timeout. */
   &[data-pending] { visibility: hidden; }
